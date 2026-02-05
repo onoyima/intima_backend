@@ -7,6 +7,11 @@ if (!process.env.DATABASE_URL) {
     "DATABASE_URL must be set. Please check your .env or system environment variables.",
   );
 }
-
-export const connection = await mysql.createConnection(process.env.DATABASE_URL);
-export const db = drizzle(connection, { schema, mode: "default" });
+export const pool = mysql.createPool({
+  uri: process.env.DATABASE_URL,
+  waitForConnections: true,
+  connectionLimit: 10,
+  enableKeepAlive: true,
+});
+export const db = drizzle(pool, { schema, mode: "default" });
+export const connection = pool;

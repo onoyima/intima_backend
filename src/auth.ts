@@ -33,7 +33,7 @@ export function setupAuth(app: Express) {
         store: sessionStore,
         cookie: {
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         }
     }));
@@ -86,17 +86,19 @@ export function setupAuth(app: Express) {
 export function registerAuthRoutes(app: Express) {
     app.get("/api/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
+    const frontendUrl = process.env.FRONTEND_URL || "";
     app.get("/api/auth/google/callback",
-        passport.authenticate("google", { failureRedirect: "/login" }),
+        passport.authenticate("google", { failureRedirect: frontendUrl ? frontendUrl + "/login" : "/login" }),
         (req, res) => {
             // Check if we should redirect back to the mobile app
             const isMobile = req.session && (req.session as any).isMobile;
             if (isMobile) {
                 delete (req.session as any).isMobile;
-                // Redirect back to Expo Go using a common scheme
-                return res.redirect("exp://135.129.124.12:8081");
+                // Redirect back to Expo Go or custom mobile URL
+                const mobileUrl = process.env.MOBILE_REDIRECT_URL || "exp://135.129.124.12:8081";
+                return res.redirect(mobileUrl);
             }
-            res.redirect("/");
+            res.redirect(frontendUrl ? frontendUrl + "/" : "/");
         }
     );
 
@@ -110,7 +112,8 @@ export function registerAuthRoutes(app: Express) {
     app.get("/api/logout", (req, res, next) => {
         req.logout((err) => {
             if (err) return next(err);
-            res.redirect("/");
+            const frontendUrl = process.env.FRONTEND_URL || "";
+            res.redirect(frontendUrl ? frontendUrl + "/" : "/");
         });
     });
 
