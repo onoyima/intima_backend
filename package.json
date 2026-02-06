@@ -4,7 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "cross-env NODE_ENV=development tsx src/index.ts",
-        "build": "esbuild src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.js --format=esm --packages=external",
+        "build": "npx tsx src/fix_schema.ts && esbuild src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.js --format=esm --packages=external",
         "start": "node dist/index.js",
         "db:push": "drizzle-kit push"
     },
