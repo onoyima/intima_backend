@@ -271,6 +271,44 @@ export async function registerRoutes(
     res.status(201).json(request);
   });
 
+  app.post("/api/wallet/deposit/stripe", requireAuth, async (req, res) => {
+    const userId = (req.user as any).id;
+    const { amount, paymentMethodId } = req.body;
+    const { processStripePayment } = await import("./payments");
+    const result = await processStripePayment(userId, Number(amount), paymentMethodId);
+    if (!result.success) return res.status(400).json(result);
+    res.json(result);
+  });
+
+  app.post("/api/wallet/deposit/paystack/init", requireAuth, async (req, res) => {
+    const userId = (req.user as any).id;
+    const { amount, email } = req.body;
+    const { initializePaystackTransaction } = await import("./payments");
+    const result = await initializePaystackTransaction(userId, Number(amount), email);
+    if (!result.success) return res.status(400).json(result);
+    res.json(result);
+  });
+
+  app.post("/api/wallet/deposit/paystack/verify", requireAuth, async (req, res) => {
+    const userId = (req.user as any).id;
+    const { reference } = req.body;
+    const { verifyPaystackTransaction } = await import("./payments");
+    const result = await verifyPaystackTransaction(reference);
+
+    if (result.success && result.amount) {
+      await storage.createTransaction({
+        userId,
+        amount: String(result.amount),
+        type: 'deposit_paystack',
+        status: 'completed',
+        metadata: { reference }
+      });
+      res.json({ success: true });
+    } else {
+      res.status(400).json(result);
+    }
+  });
+
   /**
    * INTIMACY GAMES
    */
