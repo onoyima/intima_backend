@@ -107,6 +107,9 @@ export interface IStorage {
   getNotifications(userId: string): Promise<Notification[]>;
   createNotification(notification: any): Promise<Notification>;
   markNotificationAsRead(notificationId: number): Promise<void>;
+
+  // Fertility
+  getFertilityPrediction(userId: string): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -657,6 +660,47 @@ export class DatabaseStorage implements IStorage {
     if (user?.pushToken) {
       await sendPushNotification(user.pushToken, title, body, type, data);
     }
+  }
+
+  // Fertility & Conception
+  async getFertilityPrediction(userId: string): Promise<any> {
+    const logs = await this.getCycleLogs(userId);
+    if (logs.length === 0) {
+      return { status: "unknown", message: "Log a period to see predictions." };
+    }
+
+    const lastPeriod = logs[0].startDate;
+    const cycleLength = 28; // Default, can be improved by averaging past logs
+
+    const nextPeriod = new Date(lastPeriod);
+    nextPeriod.setDate(nextPeriod.getDate() + cycleLength);
+
+    const ovulationDate = new Date(nextPeriod);
+    ovulationDate.setDate(ovulationDate.getDate() - 14);
+
+    const fertileStart = new Date(ovulationDate);
+    fertileStart.setDate(fertileStart.getDate() - 5);
+
+    const fertileEnd = new Date(ovulationDate);
+    fertileEnd.setDate(fertileEnd.getDate() + 1);
+
+    const today = new Date();
+    let status = "low";
+    let probability = "Lasts 6 days";
+
+    if (today >= fertileStart && today <= fertileEnd) {
+      status = "high";
+      probability = "High chance of conception";
+    }
+
+    return {
+      lastPeriod,
+      nextPeriod,
+      ovulationDate,
+      fertileWindow: { start: fertileStart, end: fertileEnd },
+      status,
+      probability
+    };
   }
 }
 

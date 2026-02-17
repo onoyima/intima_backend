@@ -58,4 +58,30 @@ export async function registerGameRoutes(app: any) {
         const session = await storage.updateGameSession(Number(sessionId), { gameState });
         res.json(session);
     });
+
+    app.post("/api/games/:sessionId/next", async (req: any, res: any) => {
+        const { sessionId } = req.params;
+        const session = await storage.getGameSession(Number(sessionId));
+        if (!session) return res.status(404).json({ message: "Session not found" });
+
+        let deck: string[] = [];
+        switch (session.gameType) {
+            case 'truth': deck = TRUTHS; break;
+            case 'dare': deck = DARES; break;
+            case 'desire': deck = DESIRES; break;
+            case 'dating_fun': deck = DATING_FUN; break;
+            case 'sex_styles': deck = SEX_STYLES; break;
+            default: deck = TRUTHS;
+        }
+
+        const randomCard = deck[Math.floor(Math.random() * deck.length)];
+        const nextStep = (session.currentStep || 0) + 1;
+
+        await storage.updateGameSession(Number(sessionId), {
+            currentStep: nextStep,
+            gameState: { ...(session.gameState as any), currentCard: randomCard }
+        });
+
+        res.json({ card: randomCard, step: nextStep });
+    });
 }

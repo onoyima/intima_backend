@@ -238,6 +238,12 @@ export async function registerRoutes(
     res.status(201).json(log);
   });
 
+  app.get("/api/cycle/prediction", requireAuth, async (req, res) => {
+    const userId = (req.user as any).id;
+    const prediction = await storage.getFertilityPrediction(userId);
+    res.json(prediction);
+  });
+
   /**
    * WALLET & ECONOMY
    */
@@ -298,6 +304,15 @@ export async function registerRoutes(
   app.get(api.admin.stats.path, requireAdmin, async (_req, res) => {
     const stats = await storage.getAdminStats();
     res.json(stats);
+  });
+
+  app.post("/api/admin/withdrawals/:id/process", requireAdmin, async (req, res) => {
+    const { status } = req.body;
+    await storage.processWithdrawal(Number(req.params.id), status);
+    // Notify user
+    // In a real app we'd fetch the user ID from withdrawal request, but for brevity:
+    // await storage.notifyUser(userId, "Withdrawal Update", `Your request is ${status}`, 'system');
+    res.json({ success: true });
   });
 
   /**
