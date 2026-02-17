@@ -32,9 +32,12 @@ export function setupAuth(app: Express) {
         saveUninitialized: false,
         rolling: true, // Reset expiration on every response
         store: sessionStore,
+        // For mobile and cross-device testing, we relax the secure requirement
+        // unless strictly in production with HTTPS.
+        // If users are testing on LAN (http://192.168...), 'secure: true' will block cookies.
         cookie: {
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            secure: process.env.NODE_ENV === "production" && process.env.SECURE_COOKIES === "true",
+            sameSite: "lax", // Better compatibility than 'none' for HTTP
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         }
     }));
