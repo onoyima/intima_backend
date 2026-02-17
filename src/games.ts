@@ -49,6 +49,27 @@ export const SEX_STYLES = [
     "Try having sex in a different room of the house.",
 ];
 
+export const ICEBREAKERS = [
+    "What's the best concert you've ever been to?",
+    "If you could have dinner with any historical figure, who would it be?",
+    "What's your favorite way to spend a Sunday?",
+    "What's the most spontaneous thing you've ever done?",
+    "If you could live anywhere in the world, where would it be?",
+    "What's a hobby you've always wanted to pick up?",
+    "Who is your celebrity crush?",
+    "What's 3 things on your bucket list?",
+];
+
+export const WOULD_YOU_RATHER = [
+    "Would you rather always have to say everything on your mind or never be able to speak again?",
+    "Would you rather be able to fly or be invisible?",
+    "Would you rather have a pause button or a rewind button for your life?",
+    "Would you rather give up your phone or your car for a month?",
+    "Would you rather explore space or the ocean?",
+    "Would you rather fight 1 horse-sized duck or 100 duck-sized horses?",
+    "Would you rather always be 10 minutes late or always be 20 minutes early?",
+];
+
 export async function registerGameRoutes(app: any) {
     const { storage } = await import("./storage");
 
@@ -58,7 +79,9 @@ export async function registerGameRoutes(app: any) {
             dares: DARES,
             desires: DESIRES,
             datingFun: DATING_FUN,
-            sexStyles: SEX_STYLES
+            sexStyles: SEX_STYLES,
+            icebreakers: ICEBREAKERS,
+            wouldYouRather: WOULD_YOU_RATHER
         });
     });
 
