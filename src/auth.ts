@@ -27,9 +27,10 @@ export function setupAuth(app: Express) {
     }, connection as any);
 
     app.use(session({
-        secret: process.env.SESSION_SECRET || "intima_secret_key",
-        resave: false,
+        secret: process.env.SESSION_SECRET || "intima_secret_key_secure_session",
+        resave: true, // Force save to keep session alive
         saveUninitialized: false,
+        rolling: true, // Reset expiration on every response
         store: sessionStore,
         cookie: {
             secure: process.env.NODE_ENV === "production",

@@ -7,6 +7,8 @@ export const TRUTHS = [
     "What is your favorite part of my body, and why?",
     "What's the most adventurous place you've ever thought about having sex?",
     "What did you think was my most attractive quality when we met?",
+    "Describe your most memorable sexual experience with me.",
+    "Is there anything you’ve wanted to try in bed but were afraid to ask?",
 ];
 
 export const DARES = [
@@ -16,6 +18,8 @@ export const DARES = [
     "Eat a piece of fruit in the most provocative way possible while I watch.",
     "Whisper your deepest desire in my ear for 60 seconds.",
     "Take off one piece of clothing of my choice.",
+    "Kiss me somewhere other than my lips for 60 seconds.",
+    "Send me a naugthy photo (if we are apart) or strike a pose (if together).",
 ];
 
 export const DESIRES = [
@@ -23,6 +27,8 @@ export const DESIRES = [
     "Pick one 'taboo' topic we've never discussed and let's explore it for 10 minutes.",
     "Describe your perfect 'morning after' with me.",
     "Show me exactly how you like to be touched in a specific area.",
+    "Tell me a fantasy where we are strangers meeting for the first time.",
+    "Describe an outfit you would love to see me wear.",
 ];
 
 export const DATING_FUN = [
@@ -30,6 +36,8 @@ export const DATING_FUN = [
     "Plan our dream getaway in 3 minutes. Go!",
     "What is the first thing you'd do if we won the lottery tomorrow?",
     "Re-enact our first kiss with a twist.",
+    "What is our song, and if we don't have one, what should it be?",
+    "Tell me your favorite date night memory of us.",
 ];
 
 export const SEX_STYLES = [
@@ -37,6 +45,8 @@ export const SEX_STYLES = [
     "Experiment with 'Slow Burn' - no touching for the first 10 minutes of foreplay.",
     "Introduce a toy or accessory to our session tonight.",
     "Switch who is 'in charge' for the next 30 minutes.",
+    "Explore sensory play: use a feather, ice cube, or silk scarf.",
+    "Try having sex in a different room of the house.",
 ];
 
 export async function registerGameRoutes(app: any) {
