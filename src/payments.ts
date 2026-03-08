@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
+import PaystackPkg from 'paystack-api';
 // @ts-ignore
-import { Paystack } from 'paystack-api';
+const Paystack = (PaystackPkg as any).Paystack || PaystackPkg;
 import { storage } from './storage';
 import { db } from './db';
 import { users, walletTransactions } from '@shared/schema';
