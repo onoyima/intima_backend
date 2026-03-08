@@ -26,6 +26,26 @@ async function fixSchema() {
         } else {
             console.log("Column 'push_token' already exists. No action needed.");
         }
+
+        console.log("Checking session table column types...");
+        // Check if sess column is JSON or TEXT
+        const [sessionCols]: any = await connection.execute(
+            "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'sessions' AND TABLE_SCHEMA = DATABASE()"
+        );
+
+        const sessCol = sessionCols.find((c: any) => c.COLUMN_NAME === 'sess');
+        if (sessCol && sessCol.DATA_TYPE === 'json') {
+            console.log("Changing 'sess' column in 'sessions' to TEXT for better compatibility...");
+            await connection.execute("ALTER TABLE sessions MODIFY COLUMN sess TEXT NOT NULL");
+        }
+
+        const expireCol = sessionCols.find((c: any) => c.COLUMN_NAME === 'expire');
+        if (expireCol && expireCol.DATA_TYPE !== 'int' && expireCol.DATA_TYPE !== 'int unsigned') {
+            console.log("Changing 'expire' column in 'sessions' to INT...");
+            await connection.execute("ALTER TABLE sessions MODIFY COLUMN expire INT NOT NULL");
+        }
+
+        console.log("Schema check complete.");
     } catch (err) {
         console.error("Error updating schema:", err);
     } finally {

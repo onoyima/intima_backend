@@ -6,8 +6,8 @@ export const sessions = mysqlTable(
   "sessions",
   {
     sid: varchar("sid", { length: 128 }).primaryKey(),
-    sess: json("sess").notNull(),
-    expire: timestamp("expire").notNull(),
+    sess: text("sess").notNull(),
+    expire: int("expire").notNull(),
   },
   (table) => [index("IDX_session_expire").on(table.expire)]
 );
