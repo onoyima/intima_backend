@@ -70,6 +70,24 @@ export const WOULD_YOU_RATHER = [
     "Would you rather always be 10 minutes late or always be 20 minutes early?",
 ];
 
+export const BAD_BITCH = [
+    "Tell me your most aggressive fantasy where you take full control.",
+    "What is the most 'expensive' thing you want me to do to you?",
+    "If you were a queen and I was your servant, what would be your first order?",
+    "Describe a time you felt incredibly powerful and sexy.",
+    "What is your 'Bad Bitch' anthem and what move does it inspire?",
+    "Demand that I worship one part of your body right now.",
+];
+
+export const SEXY_DADDY = [
+    "How do you like to show your dominance in the bedroom?",
+    "What is the most 'Daddy' thing I can do to make you feel in control?",
+    "Describe your ideal submissive scenario for me.",
+    "What's a rule you'd want to set for me that I have to follow all day?",
+    "Tell me a story about a time you felt like the ultimate provider.",
+    "What's the deepest register of your voice you can use to tell me what to do?",
+];
+
 export async function registerGameRoutes(app: any) {
     const { storage } = await import("./storage");
 
@@ -81,7 +99,9 @@ export async function registerGameRoutes(app: any) {
             datingFun: DATING_FUN,
             sexStyles: SEX_STYLES,
             icebreakers: ICEBREAKERS,
-            wouldYouRather: WOULD_YOU_RATHER
+            wouldYouRather: WOULD_YOU_RATHER,
+            badBitch: BAD_BITCH,
+            sexyDaddy: SEXY_DADDY
         });
     });
 

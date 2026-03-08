@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { mysqlTable, varchar, boolean, int, timestamp, json, index } from "drizzle-orm/mysql-core";
+import { mysqlTable, varchar, boolean, int, timestamp, json, index, text } from "drizzle-orm/mysql-core";
 
 // Session storage table for MySQL
 export const sessions = mysqlTable(

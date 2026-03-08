@@ -166,8 +166,9 @@ export async function registerRoutes(
     try {
       const userId = (req.user as any).id;
       const { inviteCode } = req.body;
-      const couple = await storage.pairByInviteCode(userId, inviteCode);
-      res.json(couple);
+      await storage.pairByInviteCode(userId, inviteCode);
+      const couples = await storage.getCouplesForUser(userId);
+      res.json(couples[0]);
     } catch (err: any) {
       res.status(400).json({ message: err.message });
     }
@@ -329,6 +330,16 @@ export async function registerRoutes(
   /**
    * SECURITY & COMPLIANCE
    */
+  app.post(api.security.consent.path, requireAuth, async (req, res) => {
+    const userId = (req.user as any).id;
+    const { coupleId, target, isGranted } = api.security.consent.input.parse(req.body);
+
+    // Log the consent
+    await storage.logConsent(userId, target);
+
+    res.status(201).json({ success: true });
+  });
+
   app.post(api.security.logAudit.path, requireAuth, async (req, res) => {
     const userId = (req.user as any).id;
     const { eventType, details } = api.security.logAudit.input.parse(req.body);
