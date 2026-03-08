@@ -75,7 +75,12 @@ app.use((req, res, next) => {
   const server = await registerRoutes(httpServer, app);
 
   // Seed data
-  await storage.seedCommunityRooms();
+  try {
+    await storage.seedCommunityRooms();
+    log("Community rooms seeded successfully");
+  } catch (err) {
+    log("Initial seeding failed (DB connection blocked?): " + (err as any).message, "warning");
+  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
